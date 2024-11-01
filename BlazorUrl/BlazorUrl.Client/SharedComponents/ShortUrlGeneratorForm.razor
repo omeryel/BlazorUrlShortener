@@ -1,0 +1,80 @@
+﻿@using System.ComponentModel.DataAnnotations
+@using BlazorUrl.Client.Dtos
+@using BlazorUrl.Client.Extensions
+@using BlazorUrl.Client.Interfaces
+@using System.Security.Claims
+@using BlazorUrl.Client.Services
+
+@inject ILinkService linkService
+@inject SessionStorage SessionStorage
+@inject NavigationManager navigationManager
+
+@if(_isProcessing)
+{
+    <Loader/>
+}
+
+@if (!string.IsNullOrWhiteSpace(_shortUrl))
+{
+    <GeneratedLinkModal ShortUrl="@_shortUrl" OnClose="() => _shortUrl = null " />    
+}
+
+<div class="">
+    <EditForm Model="_model" OnValidSubmit="ShortenUrlAsync">
+        <DataAnnotationsValidator/>
+<h2> Shorten a Long URL</h2>
+<p> Enter/Paste a long URL</p>
+<div class="mb-3">
+    <InputText @bind-Value="_model.LongUrl" class="form-control" placeholder="https://www.youtube.com" />
+    <ValidationMessage For="@(() => _model.LongUrl)" />
+</div>
+<div class="mb-3">
+    <button type="submit" class="btn btn-main" disabled="@_isProcessing">
+        @(_isProcessing ? "Shortening url..." : "Shorten URL")
+    </button>
+</div>
+    </EditForm>
+</div>
+
+
+@code {
+
+    [CascadingParameter]
+    public Task<AuthenticationState> AuthState  { get; set; } 
+
+    private ShortUrlGeneratorModel _model = new();
+    private bool _isProcessing;
+
+    private string? _shortUrl;
+
+    // root@mail.com -> Root.123
+
+    private async Task ShortenUrlAsync()
+    {
+        _isProcessing = true;
+
+        var authState = await AuthState;
+        if(authState.User.Identity is null || !authState.User.Identity.IsAuthenticated)
+        {
+            await SessionStorage.SaveAsync(SessionStorage.LongUrlKey, _model.LongUrl);
+
+            navigationManager.NavigateTo($"/Account/Login");
+            return;
+        }
+
+        var userId = authState.User.GetUserId(); 
+
+        var dto = new LinkCreateDto(_model.LongUrl, userId);        
+
+        var link = await linkService.CreateLinkAsync(dto);
+
+        _shortUrl = link.ShortUrl;
+        _isProcessing = false;
+    }
+
+    class ShortUrlGeneratorModel
+    {
+        [Required, Length(10, 250)]
+        public string LongUrl { get; set; }
+    }
+}

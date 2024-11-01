@@ -1,0 +1,50 @@
+﻿@using BlazorUrl.Client.SharedComponents
+@using Microsoft.AspNetCore.Components.Sections
+@inherits LayoutComponentBase
+
+<AuthorizeView>
+    <Authorized>
+        <AfterLoginAction />
+    </Authorized>
+</AuthorizeView>
+
+<div class="container-fluid bg-main text-white top-banner">
+    &nbsp;
+</div>
+
+<div class="container mt-3">
+    <div class="row mt-5 mb-2">
+        <div class="col-11 mx-auto">
+            <div class="row">
+                <div class="col-sm-6 d-flex align-items-end justify-content-center justify-content-sm-start">
+                    <h2 class="fw-bold m-0">
+                        <a href="/" class="text-decoration-none text-white"> Blazor Urls </a>
+                    </h2>
+                </div>
+                <div class="col-sm-6 d-flex justify-content-end justify-content-center justify-content-sm-end">
+                    <NavMenu />
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-11 bg-white p-4 shadow-lg rounded mx-auto">            
+            <SectionOutlet SectionName="heading" />
+            @Body
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+<div id="blazor-error-ui">
+    An unhandled error has occurred.
+    <a href="" class="reload">Reload</a>
+    <a class="dismiss">🗙</a>
+</div>
+
+

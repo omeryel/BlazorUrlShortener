@@ -1,0 +1,59 @@
+﻿@using BlazorUrl.Client.Dtos
+@using BlazorUrl.Client.Extensions
+@using BlazorUrl.Client.Interfaces
+@using BlazorUrl.Client.Services
+@rendermode @(new InteractiveAutoRenderMode(prerender: false))
+
+@inject SessionStorage SessionStorageService
+@inject ILinkService linkService
+
+@if(_isProcessing)
+{
+    <Loader />
+}
+
+@if(!string.IsNullOrWhiteSpace(_shortUrl))
+{
+    <GeneratedLinkModal ShortUrl="@_shortUrl" OnClose="() => _shortUrl = null " />
+}
+
+@code {
+
+    [CascadingParameter]
+    public Task<AuthenticationState> AuthStateTask { get; set; }
+
+    private bool _isProcessing;
+
+    private string? _shortUrl;
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if(firstRender)
+        {
+            var longUrl = await SessionStorageService.GetAsync(SessionStorage.LongUrlKey);
+
+            if (!string.IsNullOrWhiteSpace(longUrl))
+            {
+                _isProcessing = true;
+                StateHasChanged();
+                var authState = await AuthStateTask;
+                var userId = authState.User.GetUserId();
+
+                var dto = new LinkCreateDto(longUrl, userId);
+
+                var link = await linkService.CreateLinkAsync(dto);
+
+                _isProcessing = false;
+
+                _shortUrl = link.ShortUrl;
+                StateHasChanged();
+
+
+
+            }
+
+            await SessionStorageService.RemoveAsync(SessionStorage.LongUrlKey);
+
+        }
+    }
+
+}

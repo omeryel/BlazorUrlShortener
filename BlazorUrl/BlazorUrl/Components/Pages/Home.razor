@@ -1,0 +1,48 @@
+﻿@page "/"
+@using BlazorUrl.Client.SharedComponents
+
+<PageTitle>Home</PageTitle>
+
+
+<SectionContent SectionName="heading">
+    <h1 class="text-main fw-bold text-center">URL Shortner - <small>Shorten any long Link/URL</small></h1>
+</SectionContent>
+
+<div class="row">
+    <div class="col-sm-6 my-5 mx-auto shadow rounded">
+        <ShortUrlGeneratorForm @rendermode="InteractiveAuto"/>
+    </div>
+</div>
+
+<div class="row my-5">
+    <div class="col-12">
+        <h3 class="text-main fw-bold mb-4">Features: </h3>
+        <ul class="list-unstyled">
+            <li>
+                <p class="h3 mb-3">
+                    <span class="">&rarr;</span> Shorten any long URL
+                </p>
+            </li>
+            <li>
+                <p class="h3 mb-3">
+                    <span class="">&rarr;</span>  Copy the shortened URL to clipboard
+                </p>
+            </li>
+            <li>
+                <p class="h3 mb-3">
+                    <span class="">&rarr;</span> Share the shortened URL
+                </p>
+            </li>
+            <li>
+                <p class="h3 mb-3">
+                    <span class="">&rarr;</span> Track the number of clicks on the shorten URL
+                </p>
+            </li>
+             <li>
+                <p class="h3 mb-3">
+                    <span class="">&rarr;</span> And It`s Free
+                </p>
+            </li>
+        </ul>
+    </div>
+</div>
