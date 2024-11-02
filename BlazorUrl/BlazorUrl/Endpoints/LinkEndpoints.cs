@@ -53,7 +53,28 @@ namespace BlazorUrl.Endpoints
                     return Results.Ok(link);
                 });
 
+
+            linksGroup.MapDelete("/{linkId:long}", async (long linkId, ILinkService linkService, ClaimsPrincipal principal) =>
+            {
+                var userId = principal.GetUserId();
+
+                await linkService.DeleteLinkAsync(linkId, userId);
+
+                return Results.NoContent();
+            });
+
+
+            linksGroup.MapGet("/{linkId:long}", async (long linkId, ILinkService linkService, ClaimsPrincipal principal) =>
+            {
+                var userId = principal.GetUserId();
+                var linkDetailsDto = await linkService.GetLinkAsync(linkId, userId!);
+                return Results.Ok(linkDetailsDto);
+
+            });
+
             return app;
         }
+
+
     }
 }

@@ -1,0 +1,115 @@
+﻿@page "/app/my-links/{linkId:long}"
+@using BlazorUrl.Client.Dtos
+@using BlazorUrl.Client.Extensions
+@using BlazorUrl.Client.Interfaces
+@using BlazorUrl.Client.Layout
+@using BlazorUrl.Client.SharedComponents
+@using Microsoft.AspNetCore.Components.Sections
+@using Syncfusion.Blazor.Charts
+@inject NavigationManager NavigationManager
+
+@rendermode @(new InteractiveAutoRenderMode(false))
+
+
+@inject ILinkService LinkService
+
+<PageTitle>Link Detail</PageTitle>
+
+
+<SectionContent SectionName="client-heading">
+    <h1 class="text-main fw-bold text-center">
+        <i class="bx bx-link me-1"></i>
+        <span> @_linkDetailsDto?.Link.ShortUrl</span>
+    </h1>
+    <hr class="text-main" />
+</SectionContent>
+
+
+
+@if (_isLoading)
+{
+    <Loader />
+}
+else
+{
+
+
+    <div class="row my-3">
+        <div class="col-12">
+            <h3 class="text-main fw-bold">Link Details</h3>
+            <ul class="list-unstyled">
+                <li class="h5 mb-3">Long URL: <a href="@_linkDetailsDto.Link.LongUrl" class="" target="_blank">@_linkDetailsDto.Link.LongUrl</a></li>
+                <li class="h5 mb-3">Short URL: <a href="@_linkDetailsDto.Link.ShortUrl" class="" target="_blank">@_linkDetailsDto.Link.ShortUrl</a></li>
+                <li class="h5 mb-3">Is Active: <span class="fw-bold @(_linkDetailsDto.Link.IsActive ? "text-success" : "text-danger")">@_linkDetailsDto.Link.IsActive</span> </li>
+                <li class="h5 mb-3">Total Clicks: @_linkDetailsDto.Link.TotalClicks</li>
+            </ul>
+        </div>
+    </div>
+
+    <h4 class="fw-bold text-main">Analytics</h4>
+
+    <SfChart Title="Link Clicks">
+        <ChartPrimaryXAxis ValueType="Syncfusion.Blazor.Charts.ValueType.Category"></ChartPrimaryXAxis>
+
+        <ChartPrimaryYAxis LabelFormat="{value} Clicks">
+
+        </ChartPrimaryYAxis>
+        <ChartTooltipSettings Enable="true"></ChartTooltipSettings>
+
+        <ChartSeriesCollection>
+            <ChartSeries DataSource="@_linkClicks" XName="@(nameof(LinkClickData.ClickedOnStr))" YName="@(nameof(LinkClickData.Clicks))"
+            Type="ChartSeriesType.Line">
+            </ChartSeries>
+        </ChartSeriesCollection>
+    </SfChart>
+}
+
+
+@code {
+
+    [Parameter]
+    public long LinkId { get; set; }
+
+    private LinkDetailsDto? _linkDetailsDto;
+
+    [CascadingParameter]
+    public Task<AuthenticationState> AuthStateTask { get; set; }
+
+    private bool _isLoading;
+
+    private LinkClickData[] _linkClicks = [];
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (LinkId == 0)
+        {
+            NavigationManager.NavigateTo("/app/my-links", replace: true);
+            return;
+        }
+
+        _isLoading = true;
+
+        var authState = await AuthStateTask;
+        var userId = authState.User.GetUserId();
+
+        _linkDetailsDto = await LinkService.GetLinkAsync(LinkId, userId);
+        if (_linkDetailsDto is null)
+        {
+            NavigationManager.NavigateTo("/app/my-links");
+            return;
+        }
+
+        _linkClicks = _linkDetailsDto.LinkAnalytic.GroupBy(a => a.ClickedAt.Date)
+                    .Select(g => new LinkClickData(g.Key, g.Count())).OrderByDescending(x => x.ClickedOn).ToArray();
+
+        _isLoading = false;
+
+    }
+        
+
+    record LinkClickData(DateTime ClickedOn, int Clicks)
+    {
+        public string ClickedOnStr => ClickedOn.ToString("dd/MM/yyyy");
+    }
+
+}

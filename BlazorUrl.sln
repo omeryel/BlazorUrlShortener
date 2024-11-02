@@ -7,6 +7,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorUrl", "BlazorUrl\Blaz
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorUrl.Client", "BlazorUrl\BlazorUrl.Client\BlazorUrl.Client.csproj", "{6C58ACCD-CE6A-4949-9CFF-6DF9DB4E5724}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlazorUrl.Public", "BlazorUrl.Public\BlazorUrl.Public.csproj", "{A449F5AF-C798-4D81-9906-22267E86C1BF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlazorUrl.Data", "BlazorUrl.Data\BlazorUrl.Data.csproj", "{D4414BE1-0531-4089-8572-C55FFD61BFAD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +25,14 @@ Global
 		{6C58ACCD-CE6A-4949-9CFF-6DF9DB4E5724}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6C58ACCD-CE6A-4949-9CFF-6DF9DB4E5724}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6C58ACCD-CE6A-4949-9CFF-6DF9DB4E5724}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A449F5AF-C798-4D81-9906-22267E86C1BF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A449F5AF-C798-4D81-9906-22267E86C1BF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A449F5AF-C798-4D81-9906-22267E86C1BF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A449F5AF-C798-4D81-9906-22267E86C1BF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D4414BE1-0531-4089-8572-C55FFD61BFAD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D4414BE1-0531-4089-8572-C55FFD61BFAD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D4414BE1-0531-4089-8572-C55FFD61BFAD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D4414BE1-0531-4089-8572-C55FFD61BFAD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -7,5 +7,9 @@ namespace BlazorUrl.Client.Interfaces
         Task<LinkDto> CreateLinkAsync(LinkCreateDto linkCreateDto);
         Task<PagedResult<LinkDto>> GetLinksByUserAsync(string userId, int startIndex, int pageSize, bool activeOnly);
         Task<LinkDto?> UpdateLinkAsync(LinkEditDto linkEditDto);
+
+        Task DeleteLinkAsync(long id, string userId);
+
+        Task<LinkDetailsDto?> GetLinkAsync(long id, string userId);
     }
 }

@@ -4,6 +4,7 @@ using BlazorUrl.Client.Services;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Refit;
+using Syncfusion.Blazor;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 
@@ -21,5 +22,6 @@ builder.Services.AddRefitClient<ILinkApi>()
     });
 
 builder.Services.AddScoped<SessionStorage>();
+builder.Services.AddSyncfusionBlazor();
 
 await builder.Build().RunAsync();

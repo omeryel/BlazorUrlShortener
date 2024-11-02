@@ -3,6 +3,7 @@ using BlazorUrl.Client.Interfaces;
 using BlazorUrl.Data;
 using Microsoft.EntityFrameworkCore;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 
 namespace BlazorUrl.Services
 {
@@ -48,25 +49,72 @@ namespace BlazorUrl.Services
 
         }
 
+        public async Task DeleteLinkAsync(long id, string userId)
+        {
+            await using var context = _dbContextFactory.CreateDbContext();
+            var link = await context.Links.Include(l => l.LinkAnalytics).FirstOrDefaultAsync(l => l.Id == id && l.UserId == userId);
+
+            if (link is null)
+            {
+                return;
+            }
+            if (link.LinkAnalytics.Count > 0)
+            {
+                context.LinkAnalytics.RemoveRange(link.LinkAnalytics);
+            }
+            context.Links.Remove(link);
+
+            await context.SaveChangesAsync();
+        }
+
+        public async Task<LinkDetailsDto?> GetLinkAsync(long id, string userId)
+        {
+            await using var context = _dbContextFactory.CreateDbContext();
+
+            var link = await context.Links.Include(x => x.LinkAnalytics).FirstOrDefaultAsync(l => l.Id == id && l.UserId == userId);
+
+            if (link is null)
+            {
+                return null;
+            }
+
+            LinkAnalyticDto[] linkAnalytics = link.LinkAnalytics.Select(x => new LinkAnalyticDto
+            {
+                Id = x.Id,
+                ClickedAt = x.ClickedAt,
+                LinkId = x.LinkId,
+            }).ToArray() ?? [];
+
+            var linkDto = new LinkDto
+            {
+                Id = id,
+                IsActive = link.IsActive,
+                LongUrl = link.LongUrl,
+                ShortUrl = link.ShortUrl,
+                TotalClicks = linkAnalytics.Length,
+            };
+            return new LinkDetailsDto(linkDto, linkAnalytics);
+        }
+
         public async Task<PagedResult<LinkDto>> GetLinksByUserAsync(string userId, int startIndex, int pageSize, bool activeOnly)
         {
             await using var context = _dbContextFactory.CreateDbContext();
 
             var query = context.Links.Where(x => x.UserId == userId);
-            if(activeOnly)
+            if (activeOnly)
             {
                 query = query.Where(x => x.IsActive);
             }
 
             var totalCount = await query.CountAsync();
-            var links = await query.Skip(startIndex).Take(pageSize).
-                Select(x => new LinkDto
+            var links = await query.OrderByDescending(x => x.Id).Skip(startIndex).Take(pageSize)
+                .Select(x => new LinkDto
                 {
-                    Id=x.Id,
-                    LongUrl=x.LongUrl,
-                    ShortUrl=x.ShortUrl,
-                    IsActive=x.IsActive,
-                    TotalClicks=x.LinkAnalytics.Count
+                    Id = x.Id,
+                    LongUrl = x.LongUrl,
+                    ShortUrl = x.ShortUrl,
+                    IsActive = x.IsActive,
+                    TotalClicks = x.LinkAnalytics.Count
                 }).ToArrayAsync();
 
             return new PagedResult<LinkDto>(links, totalCount);
@@ -80,7 +128,7 @@ namespace BlazorUrl.Services
                 .Include(l => l.LinkAnalytics)
                 .FirstOrDefaultAsync(l => l.Id == linkEditDto.Id && l.UserId == linkEditDto.UserId);
 
-            if(dbLink is null)
+            if (dbLink is null)
             {
                 return null;
             }

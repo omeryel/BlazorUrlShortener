@@ -15,5 +15,11 @@ namespace BlazorUrl.Client.Services
         [Patch("/api/links/{linkId}")]
         Task<LinkDto?> UpdateLinkAsync(long linkId, LinkEditDto dto);
 
+        [Delete("/api/links/{linkId}")]
+        Task DeleteLinkAsync(long linkId);
+
+        [Get("/api/links/{linkId}")]
+        Task<LinkDetailsDto?> GetLinkAsync(long linkId);
+
     }
 }

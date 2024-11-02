@@ -9,6 +9,7 @@ using BlazorUrl.Services;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Syncfusion.Blazor;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -44,6 +45,7 @@ builder.Services.AddSingleton<IEmailSender<ApplicationUser>, IdentityNoOpEmailSe
 builder.Services.AddTransient<IShortCodeGeneratorService, ShortCodeGeneratorService>();
 builder.Services.AddTransient<ILinkService, LinkService>();
 builder.Services.AddScoped<SessionStorage>();
+builder.Services.AddSyncfusionBlazor();
 
 var app = builder.Build();
 
