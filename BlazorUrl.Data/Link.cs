@@ -22,6 +22,8 @@ namespace BlazorUrl.Data
 
         public bool IsActive { get; set; }
 
+        public DateTime CreatedOn { get; set; }
+
         public virtual ApplicationUser User { get; set; }
 
         [InverseProperty(nameof(LinkAnalytic.Link))]

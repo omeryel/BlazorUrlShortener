@@ -22,6 +22,11 @@ namespace BlazorUrl.Client.Services
             return _linkApi.DeleteLinkAsync(id);
         }
 
+        public Task<DashboardDataDto> GetDashboardDataAsync(string userId)
+        {
+            return _linkApi.GetDashboardDataAsync();
+        }
+
         public Task<LinkDetailsDto?> GetLinkAsync(long id, string userId)
         {
             return _linkApi.GetLinkAsync(id);

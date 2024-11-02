@@ -1,0 +1,17 @@
+﻿.box {
+    display:flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding:20px;
+    border-radius:10px;
+    margin:10px 0;
+    transition:all ease 0.3s
+}
+
+.box:hover {
+    border-radius:20px;
+}
+.cursor-pointer {
+    cursor:pointer;
+}

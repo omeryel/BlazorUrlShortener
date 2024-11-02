@@ -9,7 +9,7 @@ using System;
 
 #nullable disable
 
-namespace BlazorUrl.Migrations
+namespace BlazorUrl.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
     [Migration("00000000000000_CreateIdentitySchema")]

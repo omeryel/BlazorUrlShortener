@@ -1,0 +1,21 @@
+﻿@using BlazorUrl.Client.SharedComponents
+<div class="fab shadow-lg">
+    <button type="button" class="btn btn-main" @onclick="() => _showLinkModal = true"
+            @onmouseover="() => _fabBtnClass = string.Empty"
+            @onmouseout="@(() => {_fabBtnClass = "d-none";})">
+        <i class="bx bx-plus"></i>
+        <span class="@_fabBtnClass">Shorten URL</span>
+    </button>
+</div>
+
+@if (_showLinkModal)
+{
+    <Modal Title="Generate Short URL" OnClose="() => _showLinkModal = false" ShowFooter="false">
+        <ShortUrlGeneratorForm />
+    </Modal>
+}
+
+@code {
+    private bool _showLinkModal;
+    private string _fabBtnClass = "d-none";
+}

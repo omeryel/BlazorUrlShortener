@@ -72,6 +72,14 @@ namespace BlazorUrl.Endpoints
 
             });
 
+            linksGroup.MapGet("/dashboard", async (ILinkService linkService, ClaimsPrincipal principal) =>
+            {
+                var userId = principal.GetUserId();
+                var dashboardData = await linkService.GetDashboardDataAsync(userId!);
+                return Results.Ok(dashboardData);
+
+            });
+
             return app;
         }
 

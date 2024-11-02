@@ -3,7 +3,7 @@ using System;
 
 #nullable disable
 
-namespace BlazorUrl.Migrations
+namespace BlazorUrl.Data.Migrations
 {
     /// <inheritdoc />
     public partial class CreateIdentitySchema : Migration
